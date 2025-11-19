@@ -1,0 +1,36 @@
+Rep lenguaje natural:
+
+e._usuarios:
+-
+
+e_.id_a_usuarios:
+-Cada ID tiene asociado un alias valido
+-Cada id pertenece al e._usuarios
+-el id asociado a cada usuario, es el mismo asociado al usuario en el mapa e._id_a_usuarios
+
+e._usuarios_a_id:
+-cada alias es valido
+-Cada id asociado  tal alias pertenece a e._usuarios
+-el usuario asociado a cada id, es el mismo asociado al id  en el mapa e._usuarios_a_id
+
+e._amigo:
+-cada id no puede tener el alias asociado su id asociado en e._id_a_usuarios en su mismo set de asociado al e._amigos
+-Cada element del set asociado al id que pertenece a amigos, no pertenece al set de conocidos
+-Cada alias de cada set asociado a cada id es un alias valido
+-Cada id pertenece a e._usuarios
+-Cada alias esta asociado a un int en _usuario_a_id, y por transitividad pertenece a e._usuarios->cada alias asociado, es valido
+
+
+e._conocidos:
+-Cada alias perteneciente al set asociado al id en e._conocidos, no pertenece al al set de e._amigos asociado a su mismo id
+-Cada alias de cada set asociado a un id pertenece a e._usuarios
+-Cada id asociado a un set de alias pertenece a e._usuarios
+-Cada alias esta asociado a un int en _usuario_a_id, y por transitividad pertenece a e._usuarios->cada alias asociado, es valido
+
+e._cantidad_de_amigos:
+-Es la suma del taman~o de todos los sets divididos 2
+
+e._conocidos_usuarios_mas_popular:
+-Es el set asociado al id con el set de amigos con mas taman~o
+ 
+
