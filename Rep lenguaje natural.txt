@@ -27,9 +27,8 @@ e._conocidos:
 -Cada set asociado a un id no contiene el alias asociado a ese id en e._id_a_usuarios(no puede ser conocido de si mismo)
 
 e._cantidad_de_amigos:
--Es la suma del taman~o de todos los sets divididos 2
+-Es la suma del taman~o de todos los sets e._amigos divididos 2
 
 e._conocidos_usuarios_mas_popular:
--Es el set asociado al id con el set de amigos con mas taman~o
+-Es el set asociado al id con el set de amigos con mayor taman~o
  
-
