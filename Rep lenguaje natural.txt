@@ -1,20 +1,22 @@
 Rep lenguaje natural:
 
 e._usuarios:
--Cada string aca tiene que estar como clave en e.id_a_usuarios, e.amigos, e.conocidos
+-Cada string aca tiene que estar como clave en e.id_a_usuarios, e.amigos, e.conocidos, y tiene que estar como valor para algun strig en e._usuarios_a_id
 -su taman~o tiene que ser igual a la cantidad de claves de e_.id_a_usuarios, e._usuarios_a_id, e._amigos y e._conocidos
 
 e_.id_a_usuarios:
--Cada ID tiene asociado un alias valido
 -Cada id pertenece al e._usuarios
+-Dos Id no pueden tener asociado un mismo valor
+-Cada ID tiene asociado un alias valido
 -el id asociado a cada usuario, es el mismo asociado al usuario en el mapa e._id_a_usuarios
 -su taman~o tiene que ser igual a la cantidad de claves de e._usuarios_a_id, e._amigos y e._conocidos y al taman~o de e._usuarios
 
 
 e._usuarios_a_id:
 -cada alias es valido
--Cada id asociado  tal alias es una clave en e._usuarios. Transitivamente pertenecen a e._usuarios
 -el usuario asociado a cada id, es el mismo asociado al id  en el mapa e._usuarios_a_id
+-Cada id asociado  tal alias es una clave en e._usuarios. Transitivamente pertenecen a e._usuarios
+-Cada id tiene un usuario diferente asociado
 -su taman~o tiene que ser igual a la cantidad de claves de e_.id_a_usuarios, e._amigos, e._conocidos y al taman~o de e._usuarios
 
 
@@ -28,9 +30,9 @@ e._amigos:
 
 e._conocidos:
 -Cada id asociado a un set de alias pertenece a e._usuarios
+-Cada id no puede ser conocido de si mismo
 -Cada alias perteneciente al set asociado al id en e._conocidos, no pertenece al al set de e._amigos asociado a su mismo id(cada conocido no puede ser amigo)
 -Cada alias de cada set asociado a un id esta asociado a un id en e._usuarios_a_id, transitivamente, cada id pertenece a e._usuarios(cada usuario es un usuario valido)
--Cada set asociado a un id no contiene el alias asociado a ese id en e._id_a_usuarios(no puede ser conocido de si mismo)
 -su taman~o tiene que ser igual a la cantidad de claves de e_.id_a_usuarios, e._usuarios_a_id, e._amigos y al taman~o de e._usuarios
 
 e._cantidad_de_amigos:
@@ -39,4 +41,5 @@ e._cantidad_de_amigos:
 e._conocidos_usuarios_mas_popular:
 -Es el set asociado al id con el set de amigos con mayor taman~o
  
+
 
