@@ -1,0 +1,15 @@
+e._amigos (AGREGAR):
+- (SIMETRÍA) Para todo id_A en e._usuarios, para todo alias_B en e._amigos[id_A]:
+  Si id_B = e._usuario_a_id[alias_B], entonces 
+  e._id_a_usuario[id_A] pertenece a e._amigos[id_B]
+
+e._conocidos (AGREGAR):
+- (DEFINICIÓN) Para todo id_A en e._usuarios, para todo alias_C en e._conocidos[id_A]:
+  Existe un id_B en e._usuarios tal que:
+  * e._id_a_usuario[id_B] está en e._amigos[id_A]
+  * alias_C está en e._amigos[id_B]
+  * alias_C NO está en e._amigos[id_A]
+  
+- (COMPLETITUD) Para todo id_A, id_C en e._usuarios:
+  Si existe id_B tal que las condiciones anteriores se cumplen,
+  entonces e._id_a_usuario[id_C] debe estar en e._conocidos[id_A]
