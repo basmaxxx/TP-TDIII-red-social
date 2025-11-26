@@ -3,6 +3,7 @@ Rep lenguaje natural:
 e._usuarios:
 -Cada string aca tiene que estar como clave en e.id_a_usuarios, e.amigos, e.conocidos, y tiene que estar como valor para algun strig en e._usuarios_a_id
 -su taman~o tiene que ser igual a la cantidad de claves de e_.id_a_usuarios, e._usuarios_a_id, e._amigos y e._conocidos
+-Para cada int en e._usuarios, existe un único string en claves(e._usuarios_a_id) tal que e._usuarios_a_id[string] = int
 
 e_.id_a_usuarios:
 -Cada id pertenece al e._usuarios
@@ -25,8 +26,9 @@ e._amigos:
 -cada id no puede tener el alias asociado su id asociado en e._id_a_usuarios en su mismo set de asociado al e._amigos(no puede ser amigo de si mismo)
 -Cada elemento del set asociado al id que pertenece a amigos, no pertenece al set de conocidos(cada amigo no puede ser conocido)
 -Cada alias que pertenezca a cada set asociado a cada id es un alias valido
--Cada alias esta asociado a un int en _usuario_a_id, y por transitividad pertenece a e._usuarios(cada alias asociado, es un usuario)
+-Cada alias esta asociado a un int en _usuarios_a_id, y por transitividad pertenece a e._usuarios(cada alias asociado, es un usuario)
 -su taman~o tiene que ser igual a la cantidad de claves de e_.id_a_usuarios, e._usuarios_a_id, e._conocidos y al taman~o de e._usuarios
+-La relación de amistad es simétrica: si el alias B pertenece a e._amigos[A], entonces el alias A pertenece a e._amigos[e._usuarios_a_id[B]]
 
 e._conocidos:
 -Cada id asociado a un set de alias pertenece a e._usuarios
@@ -34,12 +36,91 @@ e._conocidos:
 -Cada alias perteneciente al set asociado al id en e._conocidos, no pertenece al al set de e._amigos asociado a su mismo id(cada conocido no puede ser amigo)
 -Cada alias de cada set asociado a un id esta asociado a un id en e._usuarios_a_id, transitivamente, cada id pertenece a e._usuarios(cada usuario es un usuario valido)
 -su taman~o tiene que ser igual a la cantidad de claves de e_.id_a_usuarios, e._usuarios_a_id, e._amigos y al taman~o de e._usuarios
+-Definición de conocido: Para cada usuario A, si B es amigo de A y C es amigo de B, pero C no es amigo de A, entonces C es conocido de A
+-Si A es conocido de C, C es conocido de A
 
 e._cantidad_de_amigos:
 -Es la suma del taman~o de todos los sets e._amigos divididos 2
 
 e._conocidos_usuarios_mas_popular:
 -Es el set asociado al id con el set de amigos con mayor taman~o
+-Si hay un empate, puede ser cualquiera de los dos con mayor cantidad de amigos
  
+
+Rep lenguaje formal:
+
+//parte de usuarios
+
+e._usuarios: 
+Para todo i:int -> i pertenece a claves (e._usuarios) ^ i pertenece a claves (e._id_a_usuarios) ^ i pertenece a claves (e._conocidos) ^ i pertenece a claves(e._amigos) ^ 
+             existe j:string ^ j pertenece a claves(e._usuarios_a_id) ^ e._usuarios_a_id[j]=i ^ mismo_tamaño(e._usuarios; e._amigos; e._conocidos; e._id_a_usuarios; e._usuarios_a_id)
+
+e._id_a_usuarios: 
+Para todo j:int -> j pertenece a e._usuarios ^ diferente_usuario_asociado (e._id_a_usuarios) ^ alias_valido(j; e._id_a_usuarios) ^ equivalentes (e._usuarios_a_id; e._id_a_usuarios)
+
+e._usuarios_a_id: 
+Para todo l:string -> l pertenece a claves(e._usuarios_a_id) ^ alias_valido (l; e._usuarios_a_id) ^ vuelta_equivalente (e._usuarios_a_id ; e._id_a_usuarios) ^ diferente_id_asociado(e._usuarios_a_id)
+
+e._amigos: 
+Para todo w:int -> w pertenece a claves(e._amigos) ^ w pertenece a e._usuarios ^ no_amigos_de_si_mismo (w; e._amigos[w]; e._id_a_usuarios[w]) ^ si_amigo_no_conocido(e._amigos[w]; e._conocidos[w]) ^ 
+           Para todo u:string -> u pertenece a e._amigos[w] ^ alias_valido (u) ^ u pertenece a claves(e._usuarios_a_id)
+//agrego simetria de amistad
+para todo h:int ->h pertenece claves(e._amigos) ^ para todo v:string->simetria_de_amistades(e._amigos[h], e._amigos[usuario_a_id[v]], id_a_usuario[h], v)
+
+
+e._conocidos: 
+Para todo r:int -> r pertenece claves(e._conocidos) ^ r pertenece e._usuarios ^ no_conocido_de_si_mismo(e._id_a_usuarios[r];e._conocidos[r]) ^ si_conocido_no_amigo(e._conocido[r];e._amigos[r])^
+
+              Para todo s:string -> s pertence a e._conocidos[r] ^ alias_valido(r) ^ r pertenece claves(e._usuarios_a_id) ^ 
+
+//agrego def de conocido
+para todo x:int -> x pertenece a claves(e._amigos) ^ para todo t:string ->  t pertenece a e._amigos[x] ^ para todo o:string ->o pertenece a e._amigos[usuarios_a_id[t]] ^ o no pertenece a e._amigos[x] ^ o pertenece a e._conocidos[x]
+
+//agrego simetria de conocidos
+^ para todo y:int ->y pertenece claves(e._conocidos)^ para todo n:string->n pertenece a e._conocidos[y] ^ simetria_de_conocidos(e._conocidos[y], e._conocidos[usuario_a_id[n]], id_a_usuario[y], n)
+
+e._cantidad_de_amigos: (sumatoria (d pertenece a claves(e._amigos)))  #(e._amigos[d])/2
+
+e._conocidos_usuarios_mas_popular: Exite un b:int ^ b pertence claves(e._amigos) ^ para todo c:int -> c pertenece e._amigos ^ b != c  ^ #(e._amigos[b]) >=  #(e._amigos[c])  ^ e._conocidos[b] = e._conocidos_usuarios_mas_popular
+
+Funciones aux 
+
+mismo_tamaño(usuarios : set<int> ; amigos:map<int;set<string>> ; conocidos:map<int,set<string>>; id_a_usuarios:map<int,string>;usuarios_a_id:map<string,int>) =
+ #(usuarios)=#(claves(amigos)) ^ #(usuarios) = (claves(conocidos)) ^ #(usuarios) =#(claves(id_a_usuarios)) ^ #(usuarios) = #(claves(usuarios_a_id))
+
+diferente_usuario_asociado(id_a_usuarios: map < int, string>) = 
+Para todo i:int -> i pertenece a claves(id_a_usuarios) ^ Para todo j:int -> j pertence a claves (id_a_usuarios) ^ i != j ^ id_a_usuarios[i] != id_a_usuarios[j]
+
+equivalentes(usuarios_a_id:map<int,string>, id_a_usuarios:map<string,int>)= 
+Para todo i:int -> i pertence a claves(id_a_usuarios) ^ existe s:string ^ j pertence a claves(usuarios_a_id) ^ id_a_usuarios[i]=j ^ usuarios_a_id [j]=i
+
+vuelta_equivalente(usuarios_a_id:map<string,int>; id_a_usuarios:map<int,string>)= 
+Para todo i:string -> i pertenece a claves(usuarios_a_id) ^ existe j:int ^ j pertenece a claves(id_a_usuarios) ^ usuarios_a_id[i]=j ^ id_a_usuarios[j]=i
+
+diferente_id_asociado(usuarios_a_id:map<string,int>)= 
+Para todo i:string -> i pertenece a claves(usuarios_a_id) ^ Para todo j:string -> j pertenece a claves(usuarios_a_id) ^ i != j ^ usuarios_a_id[i]!= usuarios_a_id[j]
+
+no_amigos_de_si_mismo(amigos:set<string>; alias:string)= 
+alias no pertenece a amigos
+
+si_amigo_no_conocido(amigos:set<string>; conocidos:set<string>)= 
+Para todo i:string -> i pertenece a amigos ^ i no pertenece a conocidos
+
+no_conocido_de_si_mismo(alias:string, conocidos:set<string>)= 
+alias no pertenece a conocidos
+
+si_conocido_no_amigo (conocidos:set<string>;amigos:set<string>)= 
+Para todo i:string -> i pertenece a conocidos ^ i no pertenece a amigos
+
+alias_valido (alias:string)= 
+0<= |alias| <= 200
+
+simetria_de_amistades(amigosA: set<string>; amigosB: set<string>; amigoA: string; amigoB: string)=
+aliasA pertenece amigosB ^ aliasB pertenece a amigosA
+
+simetria_de_conocidos(conocidosA: set<string>; conocidosB: set<string>; conocidoA: string; conocidoB: string)=
+conocidoA pertenece conocidosB ^ conocidoB pertenece a conocidosA
+
+
 
 
