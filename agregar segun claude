@@ -1,15 +1,72 @@
 e._amigos (AGREGAR):
-- (SIMETRÍA) Para todo id_A en e._usuarios, para todo alias_B en e._amigos[id_A]:
-  Si id_B = e._usuario_a_id[alias_B], entonces 
-  e._id_a_usuario[id_A] pertenece a e._amigos[id_B]
+Simetría de las amistades:
+
+Para todo id_A en e._usuarios, para todo alias_B en e._amigos[id_A]: si id_B = e._usuario_a_id[alias_B], entonces e._id_a_usuario[id_A] pertenece a e._amigos[id_B]
+
+Sets vacíos para usuarios sin amigos:
+
+Para todo id en e._usuarios: id es clave en e._amigos (aunque el set asociado puede estar vacío)
 
 e._conocidos (AGREGAR):
-- (DEFINICIÓN) Para todo id_A en e._usuarios, para todo alias_C en e._conocidos[id_A]:
-  Existe un id_B en e._usuarios tal que:
-  * e._id_a_usuario[id_B] está en e._amigos[id_A]
-  * alias_C está en e._amigos[id_B]
-  * alias_C NO está en e._amigos[id_A]
-  
-- (COMPLETITUD) Para todo id_A, id_C en e._usuarios:
-  Si existe id_B tal que las condiciones anteriores se cumplen,
-  entonces e._id_a_usuario[id_C] debe estar en e._conocidos[id_A]
+Definición correcta de conocidos:
+
+Para todo id_A en e._usuarios, para todo alias_C en e._conocidos[id_A]: existe un id_B en e._usuarios tal que:
+
+e._id_a_usuario[id_B] está en e._amigos[id_A] (B es amigo de A)
+alias_C está en e._amigos[id_B] (C es amigo de B)
+alias_C NO está en e._amigos[id_A] (C no es amigo de A)
+e._id_a_usuario[id_A] NO está en e._amigos[e._usuario_a_id[alias_C]] (A no es amigo de C - verificación simétrica)
+
+
+
+Completitud de conocidos:
+
+Para todo id_A, id_C en e._usuarios: si existe al menos un id_B en e._usuarios tal que:
+
+e._id_a_usuario[id_B] está en e._amigos[id_A]
+e._id_a_usuario[id_C] está en e._amigos[id_B]
+e._id_a_usuario[id_C] NO está en e._amigos[id_A]
+
+Entonces e._id_a_usuario[id_C] debe estar en e._conocidos[id_A]
+
+Sets vacíos para usuarios sin conocidos:
+
+Para todo id en e._usuarios: id es clave en e._conocidos (aunque el set asociado puede estar vacío)
+
+Simetría de conocidos:
+
+Para todo id_A en e._usuarios, para todo alias_C en e._conocidos[id_A]: si id_C = e._usuario_a_id[alias_C], entonces e._id_a_usuario[id_A] pertenece a e._conocidos[id_C]
+
+e._cantidad_de_amigos (AGREGAR):
+Fórmula exacta:
+
+e._cantidad_de_amigos = (suma de |e._amigos[id]| para todo id en e._usuarios) / 2
+
+Alternativa (más clara):
+
+e._cantidad_de_amigos cuenta el número de pares no ordenados {id_A, id_B} tales que el alias de id_B está en e._amigos[id_A]
+
+e._conocidos_usuarios_mas_popular (AGREGAR):
+Definición del usuario más popular:
+
+Existe un id_max en e._usuarios tal que:
+
+Para todo id en e._usuarios: |e._amigos[id]| ≤ |e._amigos[id_max]|
+e._conocidos_usuarios_mas_popular = e._conocidos[id_max]
+
+
+
+Caso especial sin amistades:
+
+Si e._cantidad_de_amigos = 0, entonces e._conocidos_usuarios_mas_popular puede ser cualquier set (o indefinido según como lo manejes)
+
+Nota sobre empates:
+
+Si hay múltiples usuarios con el máximo número de amigos, e._conocidos_usuarios_mas_popular es el set de conocidos de alguno de ellos
+
+Consistencia bidireccional entre mapas (AGREGAR sección nueva):
+Biyección entre _id_a_usuario y _usuario_a_id:
+
+Para todo id en las claves de e._id_a_usuario: e._usuario_a_id[e._id_a_usuario[id]] = id
+Para todo alias en las claves de e._usuario_a_id: e._id_a_usuario[e._usuario_a_id[alias]] = alias
+(Esto g
