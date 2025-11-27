@@ -78,7 +78,7 @@ vuelta_equivalente(e._usuarios_a_id ; e._id_a_usuarios) ^ diferente_id_asociado(
 
 //e._amigos: 
 ((Para todo w:int)(w pertenece a claves(e._amigos))) -> w pertenece a e._usuarios ^
- no_amigos_de_si_mismo(w; e._amigos[w]; e._id_a_usuarios[w]) ^ si_amigo_no_conocido(e._amigos[w]; e._conocidos[w]) ^ 
+ no_amigos_de_si_mismo(e._amigos[w]; e._id_a_usuarios[w]) ^ si_amigo_no_conocido(e._amigos[w]; e._conocidos[w]) ^ 
 ((Para todo u:string)(u pertenece a e._amigos[w])) -> alias_valido (u) ^ u pertenece a claves(e._usuarios_a_id)^
 ((Para todo h:int)(h pertenece claves(e._amigos))) ->
 ((Para todo v:string)(v pertenece a e._amigos[h]))->simetria_de_amistades(e._amigos[h], e._amigos[usuario_a_id[v]], id_a_usuario[h], v)^
@@ -112,7 +112,7 @@ diferente_usuario_asociado(id_a_usuarios: unordered_map< int, string>) =
  i != j ^ id_a_usuarios[i] != id_a_usuarios[j]
 
 equivalentes(usuarios_a_id: unordered_map<int,string>, id_a_usuarios: unordered_map<string,int>)= 
-((Para todo i:int)(i pertence a claves(id_a_usuarios))) -> (Existe s:string) ^ j pertence a claves(usuarios_a_id) ^ 
+((Para todo i:int)(i pertence a claves(id_a_usuarios))) -> (Existe j:string) ^ j pertence a claves(usuarios_a_id) ^ 
 id_a_usuarios[i]=j ^ usuarios_a_id [j]=i
 
 vuelta_equivalente(usuarios_a_id: unordered_map<string,int>; id_a_usuarios: unordered_map<int,string>)= 
@@ -143,5 +143,6 @@ aliasA pertenece amigosB ^ aliasB pertenece a amigosA
 
 simetria_de_conocidos(conocidosA: set<string>; conocidosB: set<string>; conocidoA: string; conocidoB: string)=
 conocidoA pertenece conocidosB ^ conocidoB pertenece a conocidosA
+
 
 
